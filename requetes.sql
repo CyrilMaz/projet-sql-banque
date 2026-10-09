@@ -156,3 +156,52 @@ parts_agences AS (
 SELECT *
 FROM parts_agences
 ORDER BY total_envoye DESC;
+
+
+
+-- Q9 : Quelle est la hiérarchie des agences bancaires ?
+
+WITH RECURSIVE hierarchie AS (
+    SELECT
+        id,
+        nom,
+        agence_parente_id,
+        0 AS niveau,
+        nom::text AS chemin
+    FROM agences
+    WHERE agence_parente_id IS NULL
+
+    UNION ALL
+
+    SELECT
+        a.id,
+        a.nom,
+        a.agence_parente_id,
+        h.niveau + 1,
+        h.chemin || ' > ' || a.nom
+    FROM agences a
+    JOIN hierarchie h ON a.agence_parente_id = h.id
+)
+SELECT id, nom, niveau, chemin
+FROM hierarchie
+ORDER BY chemin;
+
+
+
+-- Q10 : Quels jours n'ont eu aucun virement effectué ?
+
+SELECT
+    j.jour::date AS jour,
+    COUNT(v.id) AS nombre_virements,
+    COALESCE(SUM(v.montant), 0) AS montant_total
+FROM generate_series(
+    DATE '2026-07-01',
+    DATE '2026-09-30',
+    INTERVAL '1 day'
+) AS j(jour)
+LEFT JOIN virements v
+    ON v.date_virement = j.jour::date
+    AND v.statut = 'effectue'
+GROUP BY j.jour
+HAVING COUNT(v.id) = 0
+ORDER BY j.jour;

@@ -60,3 +60,23 @@ Résultat : la requête identifie les comptes qui envoient plus d'argent que la 
 La première CTE calcule le montant total des virements effectués par agence. La deuxième CTE calcule la part de chaque agence dans le total.
 
 Résultat : l'agence 3 arrive en tête avec 2 167 € de virements, soit 8,79 % du total.
+
+
+
+## Q9 — Hiérarchie des agences
+
+La fonction WITH RECURSIVE permet de parcourir la hiérarchie des agences bancaires.
+
+Résultat : le siège central est au niveau 0 et les 14 agences rattachées sont au niveau 1.
+
+La colonne chemin permet de visualiser les relations entre les agences.
+
+
+
+## Q10 — Jours sans activité bancaire
+
+La fonction generate_series() génère toutes les dates de la période étudiée.
+
+Le LEFT JOIN permet de conserver les jours sans virement effectué, et COALESCE() remplace les montants absents par 0.
+
+Résultat : la requête affiche uniquement les jours où aucun virement n'a été effectué.
