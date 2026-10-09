@@ -80,3 +80,28 @@ La fonction generate_series() génère toutes les dates de la période étudiée
 Le LEFT JOIN permet de conserver les jours sans virement effectué, et COALESCE() remplace les montants absents par 0.
 
 Résultat : la requête affiche uniquement les jours où aucun virement n'a été effectué.
+
+
+
+
+## Q11 — Rapport des virements avec sous-totaux
+
+La fonction ROLLUP permet de calculer les montants des virements par agence et par statut, avec des sous-totaux et un total général.
+
+GROUPING() permet de distinguer les sous-totaux des lignes normales.
+
+Résultat : le rapport permet de comparer l'activité des agences et d'obtenir une vue globale des virements.
+
+
+
+## Q12 — Comparaison de la moyenne et de la médiane
+
+La fonction AVG() calcule la moyenne des virements, tandis que percentile_cont(0.5) calcule leur médiane.
+
+Résultats :
+- Moyenne : 267,86 €
+- Médiane : 265,50 €
+
+Les deux valeurs sont très proches, ce qui indique qu'elles représentent assez bien les montants des virements.
+
+La médiane reste toutefois plus robuste face aux valeurs extrêmes, car elle est moins influencée par les virements exceptionnellement élevés.

@@ -205,3 +205,36 @@ LEFT JOIN virements v
 GROUP BY j.jour
 HAVING COUNT(v.id) = 0
 ORDER BY j.jour;
+
+
+
+-- Q11 : Quel est le montant des virements par agence et par statut ?
+
+SELECT
+    CASE
+        WHEN GROUPING(c.agence_id) = 1 THEN 'Toutes les agences'
+        ELSE c.agence_id::text
+    END AS agence,
+    CASE
+        WHEN GROUPING(v.statut) = 1 THEN 'Tous les statuts'
+        ELSE v.statut
+    END AS statut,
+    COUNT(*) AS nombre_virements,
+    SUM(v.montant) AS montant_total
+FROM virements v
+JOIN comptes c ON v.compte_source_id = c.id
+GROUP BY ROLLUP(c.agence_id, v.statut)
+ORDER BY c.agence_id NULLS LAST, v.statut NULLS LAST;
+
+
+
+-- Q12 : Quelle est la moyenne et la médiane des virements effectués ?
+
+SELECT
+    ROUND(AVG(montant), 2) AS moyenne,
+    ROUND(
+        percentile_cont(0.5) WITHIN GROUP (ORDER BY montant)::numeric,
+        2
+    ) AS mediane
+FROM virements
+WHERE statut = 'effectue';
