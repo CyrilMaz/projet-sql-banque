@@ -103,3 +103,56 @@ SELECT
 FROM virements
 WHERE statut = 'effectue'
 ORDER BY date_virement, id;
+
+
+
+-- Q7 : Quels comptes ont envoyé plus d'argent que la moyenne ?
+
+WITH total_par_compte AS (
+    SELECT
+        compte_source_id AS compte_id,
+        SUM(montant) AS total_envoye
+    FROM virements
+    WHERE statut = 'effectue'
+    GROUP BY compte_source_id
+),
+moyenne AS (
+    SELECT AVG(total_envoye) AS moyenne_envoyee
+    FROM total_par_compte
+)
+SELECT
+    t.compte_id,
+    t.total_envoye,
+    ROUND(m.moyenne_envoyee, 2) AS moyenne
+FROM total_par_compte t
+CROSS JOIN moyenne m
+WHERE t.total_envoye > m.moyenne_envoyee
+ORDER BY t.total_envoye DESC;
+
+
+
+
+-- Q8 : Quelle part des virements effectués représente chaque agence ?
+
+WITH total_par_agence AS (
+    SELECT
+        c.agence_id,
+        SUM(v.montant) AS total_envoye
+    FROM virements v
+    JOIN comptes c ON v.compte_source_id = c.id
+    WHERE v.statut = 'effectue'
+    GROUP BY c.agence_id
+),
+parts_agences AS (
+    SELECT
+        agence_id,
+        total_envoye,
+        ROUND(
+            100.0 * total_envoye / SUM(total_envoye) OVER (),
+            2
+        ) AS part_pct
+    FROM total_par_agence
+)
+SELECT *
+FROM parts_agences
+ORDER BY total_envoye DESC;

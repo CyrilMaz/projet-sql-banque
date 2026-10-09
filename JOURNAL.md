@@ -43,3 +43,20 @@ Résultat : chaque compte affiche sa contribution en pourcentage au solde total 
 La fonction AVG() OVER() avec ROWS BETWEEN permet de calculer la moyenne des 3 derniers virements effectués.
 
 Résultat : cette moyenne permet de suivre l'évolution des montants des virements en réduisant les variations ponctuelles.
+
+
+
+## Q7 — Comptes au-dessus de la moyenne des virements
+
+La première CTE calcule le total des virements effectués par compte.
+La deuxième CTE calcule la moyenne de ces totaux.
+
+Résultat : la requête identifie les comptes qui envoient plus d'argent que la moyenne.
+
+
+
+## Q8 — Répartition des virements par agence
+
+La première CTE calcule le montant total des virements effectués par agence. La deuxième CTE calcule la part de chaque agence dans le total.
+
+Résultat : l'agence 3 arrive en tête avec 2 167 € de virements, soit 8,79 % du total.
