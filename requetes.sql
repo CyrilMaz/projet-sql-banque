@@ -238,3 +238,29 @@ SELECT
     ) AS mediane
 FROM virements
 WHERE statut = 'effectue';
+
+
+
+-- Q13 : Quelles sont les performances de chaque agence ?
+
+WITH activite_agences AS (
+    SELECT
+        c.agence_id,
+        COUNT(v.id) AS nombre_virements,
+        SUM(v.montant) AS montant_total
+    FROM virements v
+    JOIN comptes c ON v.compte_source_id = c.id
+    WHERE v.statut = 'effectue'
+    GROUP BY c.agence_id
+)
+SELECT
+    agence_id,
+    nombre_virements,
+    montant_total,
+    RANK() OVER (ORDER BY montant_total DESC) AS rang,
+    ROUND(
+        100.0 * montant_total / SUM(montant_total) OVER (),
+        2
+    ) AS part_pct
+FROM activite_agences
+ORDER BY rang;

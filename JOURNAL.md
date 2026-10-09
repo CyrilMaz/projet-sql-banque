@@ -105,3 +105,15 @@ Résultats :
 Les deux valeurs sont très proches, ce qui indique qu'elles représentent assez bien les montants des virements.
 
 La médiane reste toutefois plus robuste face aux valeurs extrêmes, car elle est moins influencée par les virements exceptionnellement élevés.
+
+
+
+## Q13 — Tableau de bord de direction
+
+Cette requête combine une CTE et des fonctions de fenêtre pour analyser les performances des agences bancaires.
+
+La CTE calcule le nombre et le montant total des virements effectués par agence.
+
+RANK() classe les agences selon leur activité, tandis que SUM() OVER() calcule leur part dans le total.
+
+Résultat : l'agence 3 arrive première avec 2 167 € de virements, soit 8,79 % du total.
