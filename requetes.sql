@@ -69,3 +69,37 @@ SELECT
     ) AS evolution_pct
 FROM virements_mensuels
 ORDER BY mois;
+
+
+
+-- Q5 : Quelle part du solde total représente chaque compte ?
+
+SELECT
+    id,
+    client_id,
+    solde,
+    ROUND(
+        100.0 * solde / SUM(solde) OVER (),
+        2
+    ) AS part_pct
+FROM comptes
+ORDER BY part_pct DESC;
+
+
+
+-- Q6 : Quelle est la moyenne des 3 derniers virements effectués ?
+
+SELECT
+    id,
+    date_virement,
+    montant,
+    ROUND(
+        AVG(montant) OVER (
+            ORDER BY date_virement, id
+            ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
+        ),
+        2
+    ) AS moyenne_mobile
+FROM virements
+WHERE statut = 'effectue'
+ORDER BY date_virement, id;

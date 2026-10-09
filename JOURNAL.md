@@ -27,3 +27,19 @@ Résultat : le montant cumulé augmente chaque mois en ajoutant les virements du
 La fonction LAG() permet de comparer le montant des virements effectués avec celui du mois précédent.
 
 Résultat : l'évolution en pourcentage permet d'identifier les mois où l'activité bancaire augmente ou diminue.
+
+
+
+## Q5 — Part de chaque compte dans le solde total
+
+La fonction SUM() OVER () permet de calculer le solde total de tous les comptes sans regrouper les lignes.
+
+Résultat : chaque compte affiche sa contribution en pourcentage au solde total de la banque.
+
+
+
+## Q6 — Moyenne mobile des virements
+
+La fonction AVG() OVER() avec ROWS BETWEEN permet de calculer la moyenne des 3 derniers virements effectués.
+
+Résultat : cette moyenne permet de suivre l'évolution des montants des virements en réduisant les variations ponctuelles.
