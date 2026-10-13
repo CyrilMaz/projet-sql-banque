@@ -54,6 +54,17 @@ Cette table décrit les agences et permet de représenter leur hiérarchie.
 - `adresse` : adresse de l'agence.
 - `agence_parente_id` : identifiant de l'agence dont elle dépend.
 
+### Comment lire les tables
+
+- **`clients`** : un client est identifié par `id` et peut posséder plusieurs comptes.
+- **`comptes`** : chaque compte appartient à un client (`client_id`) et à une agence (`agence_id`). Son type est limité à `courant` ou `epargne`.
+- **`agences`** : une agence peut dépendre d'une autre agence via `agence_parente_id` ; une valeur `NULL` désigne une agence sans parente, comme le siège central.
+- **`virements`** : chaque ligne représente un transfert entre deux comptes distincts, avec un montant strictement positif et un statut parmi `effectue`, `en_attente` et `refuse`.
+
+Les colonnes `id` sont des clés primaires. Les champs qui pointent vers une autre
+table sont des clés étrangères ; ces contraintes sont définies dans `schema.sql`.
+
+
 
 ## Relations entre les tables :
 - `comptes.client_id` → `clients.id`
@@ -70,6 +81,40 @@ clients (1) ──< comptes >── (1) agences
 
 agences (parente) (1) ──< agences (enfants)
 ```
+
+### Schéma relationnel (Mermaid)
+
+```mermaid
+erDiagram
+    clients ||--o{ comptes : possede
+    agences ||--o{ comptes : gere
+    comptes ||--o{ virements : compte_source_id
+    comptes ||--o{ virements : compte_destination_id
+    agences o|--o{ agences : agence_parente_id
+
+    clients {
+        int id PK
+    }
+    comptes {
+        int id PK
+        int client_id FK
+        int agence_id FK
+    }
+    agences {
+        int id PK
+        int agence_parente_id FK
+    }
+    virements {
+        int id PK
+        int compte_source_id FK
+        int compte_destination_id FK
+    }
+```
+
+Chaque virement référence obligatoirement un compte source et un compte
+destination. Chaque compte dépend d'un client et d'une agence. Une agence peut
+avoir zéro ou une agence parente et plusieurs agences filles.
+
 
 ## Installation
 
