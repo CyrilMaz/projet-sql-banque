@@ -8,6 +8,16 @@ Il regroupe des clients, leurs comptes, les agences bancaires et les virements.
 Les données fictives permettent d'explorer l'activité de la banque sur plusieurs mois.
 Les requêtes SQL servent à analyser les soldes, les virements et les performances des agences.
 
+### Objectif pédagogique et analytique
+
+Ce projet sert de support à un cours de SQL sur PostgreSQL : à partir d'un jeu de
+données fictives, il permet de pratiquer les jointures, les agrégations et les
+fonctions de fenêtre. L'objectif analytique est de comparer l'activité des
+agences, d'étudier la répartition des soldes et de suivre les virements dans le
+temps. Le dossier `requetes.sql` contient les analyses à exécuter après le
+chargement des données.
+
+
 # Tables :
 
 ## table clients :
