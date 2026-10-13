@@ -136,6 +136,24 @@ Le jeu de données est prévu pour une base vide. N'exécutez pas de nouveau
 `seed.sql` sur une base déjà remplie : le script insère à nouveau les données
 et n'est pas conçu pour être relancé.
 
+### Installation depuis un terminal
+
+**Prérequis :** PostgreSQL installé, `psql` accessible et un utilisateur disposant
+du droit de créer une base. Depuis le dossier `projet-sql-banque`, il est aussi
+possible d'exécuter les scripts directement depuis un terminal :
+
+```bash
+createdb -U postgres banque
+psql -U postgres -d banque -f schema.sql
+psql -U postgres -d banque -f seed.sql
+```
+
+Adaptez `postgres` au nom de votre utilisateur PostgreSQL et renseignez le mot
+de passe si nécessaire. Si la base `banque` existe déjà, ne relancez pas la
+création ni l'importation des données sans vérifier son contenu. Vous pouvez
+ensuite exécuter les analyses avec `psql -U postgres -d banque -f requetes.sql`.
+
+
 ## Vérification
 
 Après le chargement, cette requête indique le nombre de virements et la période
@@ -151,3 +169,34 @@ FROM virements;
 
 Avec le jeu de données fourni, le résultat attendu est **120 virements**, du
 **2026-07-01** au **2026-09-30** inclus.
+
+### Contrôles complémentaires
+
+Pour vérifier que toutes les tables ont été chargées :
+
+```sql
+SELECT 'clients' AS table_name, COUNT(*) AS total FROM clients
+UNION ALL
+SELECT 'comptes', COUNT(*) FROM comptes
+UNION ALL
+SELECT 'agences', COUNT(*) FROM agences
+UNION ALL
+SELECT 'virements', COUNT(*) FROM virements;
+```
+
+Le jeu de données initial contient **15 clients**, **30 comptes**, **15 agences**
+(dont un siège central) et **120 virements**.
+
+Pour contrôler la distribution des statuts :
+
+```sql
+SELECT statut, COUNT(*) AS nombre
+FROM virements
+GROUP BY statut
+ORDER BY statut;
+```
+
+Résultats attendus : **92** virements `effectue`, **16** `en_attente` et
+**12** `refuse`. Le contrôle des dates porte sur tous les statuts ; il vérifie
+que les dates extrêmes sont le **1er juillet 2026** et le **30 septembre 2026**.
+
